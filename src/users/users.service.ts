@@ -2,7 +2,7 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { RegisterBody } from 'src/auth/interfaces/register-interface';
+import { RegisterBody } from 'src/auth/dto/register-interface.dto';
 import { hashPassword } from 'src/utils/password-manager';
 
 @Injectable()
@@ -34,6 +34,16 @@ export class UsersService {
 
         } catch (e) {
             console.log('Ha ocurrido un error al generar usuario', e);
+            throw new InternalServerErrorException('Ha ocurrido un error');
+        }
+
+    }
+
+    async saveUser(user: User) {
+        try {
+            await this.userRepository.save(user)
+        } catch (e) {
+            console.log('Ha ocurrido un error al guardar el usuario', e);
             throw new InternalServerErrorException('Ha ocurrido un error');
         }
 

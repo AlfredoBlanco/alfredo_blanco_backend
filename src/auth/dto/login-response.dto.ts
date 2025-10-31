@@ -1,6 +1,6 @@
 import { User } from "src/users/entities/user.entity";
 
-export interface LoginResponse {
+export class LoginResponse {
     user: User;
     token: string;
 }

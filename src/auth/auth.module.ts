@@ -7,6 +7,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { UserLocalStrategy } from './strategies/user-local.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { MailerModule } from 'src/mailer/mailer.module';
 
 @Module({
   imports: [
@@ -21,7 +22,8 @@ import { JwtStrategy } from './strategies/jwt.strategy';
       },
       imports: [ConfigModule],
       inject: [ConfigService],
-    })
+    }),
+    MailerModule,
   ],
   controllers: [AuthController],
   providers: [
