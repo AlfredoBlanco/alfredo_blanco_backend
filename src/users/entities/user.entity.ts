@@ -1,5 +1,6 @@
 import { Exclude } from "class-transformer";
-import { Column, Entity, Generated, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from "typeorm";
+import { Upload } from "../../uploads/entities/upload.entity";
+import { Column, Entity, Generated, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany } from "typeorm";
 
 
 @Entity()
@@ -39,4 +40,9 @@ export class User {
         onUpdate: 'CURRENT_TIMESTAMP',
     })
     updatedAt: Date;
+
+    @OneToMany(() => Upload, (upload) => upload.user, {
+        onDelete: 'CASCADE',
+    })
+    uploads: Upload[];
 }
