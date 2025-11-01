@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { CopyObjectCommand, DeleteObjectCommand, GetObjectCommand, HeadObjectCommand, PutObjectCommand, RenameObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { CopyObjectCommand, CreateBucketCommand, DeleteObjectCommand, GetObjectCommand, HeadObjectCommand, PutObjectCommand, RenameObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { AWS_ACCESS_KEY_ID, AWS_REGION, AWS_SECRET_ACCESS_KEY, S3_BUCKET, S3_ENDPOINT } from 'src/config/global-vars';
 import { createWriteStream } from 'fs';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
@@ -15,6 +15,23 @@ export class AwsService {
         },
         forcePathStyle: true
     })
+
+    async onModuleInit() {
+        await this.createBucket();
+    }
+
+    async createBucket() {
+        try {
+            await this.s3Client.send(new CreateBucketCommand({ Bucket: S3_BUCKET }));
+            console.log(`Bucket ${S3_BUCKET} creado ✅`);
+        } catch (err: any) {
+            if (err.name === 'BucketAlreadyOwnedByYou') {
+                console.log(`Bucket ${S3_BUCKET} ya existe`);
+            } else {
+                throw err;
+            }
+        }
+    }
 
     async checkIfObjectExists(filename: string) {
         try {
